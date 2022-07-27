@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="description" content=""/>
+        <meta name="author" content=""/>
+        <title>Randomizer</title>
+        <!-- Bootstrap core CSS -->
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet"/>
+        <!-- Custom styles for this template -->
+        <link href="sticky-footer-navbar.css" rel="stylesheet"/>
+		<link href="bootstrap/css/bootstrap-dialog.css" rel="stylesheet"/>
+		<style>
+			.btn-file {
+			  position: relative;
+			  overflow: hidden;
+			}
+			.btn-file input[type=file] {
+			  position: absolute;
+			  top: 0;
+			  right: 0;
+			  min-width: 100%;
+			  min-height: 100%;
+			  font-size: 100px;
+			  text-align: right;
+			  filter: alpha(opacity=0);
+			  opacity: 0;
+			  background: red;
+			  cursor: inherit;
+			  display: block;
+			}
+			input[readonly] {
+			  background-color: white !important;
+			  cursor: text !important;
+			}				
+		</style>
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    </head>
+    <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+        <!-- Wrap all page content here -->
+        <div id="wrap">
+            <!-- Fixed navbar -->
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>                         
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active">
+                                <a href="#" class="page-scroll">Home</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Classes/Groups <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-header">Group Management</li>
+                                    <li>
+                                        <a href="#edit_create" class="page-scroll">Edit/Create Class List</a>
+                                    </li>
+                                    <li>
+                                        <a href="#import_class" class="page-scroll">Import Class List from File</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Randomization</li>
+                                    <li>
+                                        <a href="#randomize" class="page-scroll">Randomize Selected Group</a>
+                                    </li>
+                                    <li>
+                                        <a href="#peer_review" class="page-scroll">Process Peer Review</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#about" class="page-scroll">About</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+            <!-- Begin page content -->
+            <div class="container">
+                <div class="page-header">
+					<h1>PRAGM<em>atic</em></h1>
+                    <h4>Peer Review Assistant & Group Management</h4>
+                </div>
+                <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added within <code>#wrap</code> with <code>padding-top: 60px;</code> on the <code>.container</code>.</p>
+                <p>Back to <a href="../sticky-footer">the default sticky footer</a> minus the navbar.</p>
+                <section id="edit_create" class="container content-section">
+                    <div class="row col-lg-12">
+                        <h2>Edit/Create Class List</h2>
+						<div class="row">
+							<div class="col-lg-6 col-sm-6 col-12">
+								<h4>Create New Class</h4>
+								<p>Individually add and delete members of a new class or an existing class.</p>
+								<div class="input-group">
+									<span class="input-group-btn">
+										<span class="btn btn-primary btn-file">
+											Browse&hellip; <input type="file" multiple>
+										</span>
+									</span>
+									<input type="text" class="form-control" readonly>
+								</div>
+								<span class="help-block">
+									Try selecting one or more files and watch the feedback
+								</span>
+							</div>							
+						</div>
+						
+                        <p><a href="#home" class="page-scroll">Back to top</a></p>
+                    </div>                     
+                </section>
+				<hr/>
+                <section id="about" class="container content-section">
+                    <div class="row col-lg-12">
+                        <h2>About</h2>
+						<h3>Using Randomizer</h3>
+						<p>
+							This application will help you divide a class or group into sub-groups of randomly selected students of a given size.					
+						</p>
+						<h4>Instructions</h4>
+						<ol>
+							<li>First step is to have a readily available list of your classes. When running the app from a smartphone, 
+							the list can be stored on the device itself or in the cloud - as long as you have file access to it.</li>
+							<li>The list is comprised of a student name per line delimited by a cr-lf character (carriage return/line feed).</li>
+							<li>When the list is loaded, return to the main form and enter the size of the groups you require.</li>
+							<li>Press the "Randomize!" button and you will be presented with a randomised list.</li>
+							<li>Future versions will enable you to save these randomised groups for re-use.</li>
+						</ol>
+					</div>                     
+                </section>
+                <hr />
+            </div>
+        </div>
+        <div id="footer">
+            <div class="container">
+                <p class="text-muted">Place sticky footer content here.</p>
+            </div>
+        </div>
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="assets/js/ie10-viewport-bug-workaround.js"></script>		
+        <script src="assets/js/jquery.easing.min.js"></script>
+		<script src="assets/js/bootstrap-dialog.js"></script>
+		<script>
+$(document).on('change', '.btn-file :file', function() {
+  var input = $(this),
+      numFiles = input.get(0).files ? input.get(0).files.length : 1,
+      label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+  input.trigger('fileselect', [numFiles, label]);
+});
+
+$(document).ready( function() {
+    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+        
+        var input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+        
+        if( input.length ) {
+            input.val(log);
+        } else {
+            if( log ) alert(log);
+        }
+        
+    });
+});		
+		</script> 		
+    </body>
+</html>

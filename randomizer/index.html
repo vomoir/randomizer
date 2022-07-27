@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>RNDMZR</title>
+    <style>
+        @media print {
+            .group {
+                height: 100%;
+            }
+        }
+        
+        .group {
+            margin: 1em;
+            padding: 1em;
+        }
+        
+        #group_list {
+            display: none;
+        }
+        
+        .yellow {
+            background-color: yellow;
+        }
+    </style>
+    <link href="css/themes/default/jquery.mobile-1.3.0.css" rel="stylesheet">
+    <!--link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"/-->
+
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.mobile-1.3.0.js"></script>
+    <script src="js/jquery-csv.js"></script>
+    <script src="js/offline.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/random.js"></script>
+    <script src="js/rndmzr.js"></script>
+    <script src="js/jquery.plugin.js"></script>
+    <script src="js/jquery.flightboard.js"></script>
+    <script>
+        $(document).ready(function() {
+            if (isAPIAvailable()) {
+                $('#files').bind('change', handleFileSelect);
+                $('#classListFile').bind('change', handleFileSelect);
+            }
+            $('#student-entry').keypress(function(event) {
+                if (event.keyCode == 13) {
+                    addClassMember();
+                }
+            });
+
+            // Called in offline.js:
+            $('#classGroupList').bind('change', getClassToDisplay);
+            $('#classesList').bind('change', getClassToEdit);
+
+            initDatabase();
+            outputClasses(_updateClassesList);
+            var classList = getClassLists();
+            $.each(classList, function(value) {
+                $('#class-entry').val(value);
+            });
+
+            $('#btnDelete').click(function() {
+                $('.yellow').each(function() {
+                    $(this).animate({
+                        marginLeft: parseInt($(this).css('marginLeft'), 10) === 0 ? $(this).outerWidth() : 0
+                    }).fadeOut('fast');
+                });
+            });
+
+        });
+
+        function getClassToDisplay() {
+            var classId = $("#classGroupList").val();
+            console.log($("#classGroupList option:selected").text());
+            toast(classId);
+            getClassListById(classId);
+        }
+
+        function getClassToEdit() {
+            var classId = $("#classesList").val();
+            console.log($("#classesList option:selected").text());
+            toast(classId);
+            getClassMembersById(classId);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="type-interior" data-role="page" id="page">
+        <div data-role="header">
+            <h1>The Randomizer</h1>
+            <h2>Group Management App</h2>
+        </div>
+        <div data-role="content">
+            <div class="ui-content" data-role="popup" data-theme="e" id="uir_instructions" style="max-width:550px;">
+                <a class="ui-btn-right" data-icon="delete" data-iconpos="notext" data-rel="back" data-role="button" data-theme="a" href="#">Close</a>
+                <h4>What does it do:</h4>
+                <p>Randomizer will take a list of items and randomly generate a list of a given size. The list can be students, topics, questions, anything!</p>
+            </div>
+            <!-- =========== Main Menu ========== -->
+            <ul data-dividertheme="f" data-inset="true" data-role="listview" data-theme="c">
+                <li data-role="list-divider">Menu</li>
+                <li>
+                    <a data-inline="true" data-mini="true" data-rel="page" data-transition="turn" href="#uir_createclass">Edit/Create class list</a>
+                </li>
+                <li>
+                    <a data-inline="true" data-mini="true" data-rel="dialog" data-transition="flip" href="#uir_openprojectfile">Import class list from file</a>
+                </li>
+                <li>
+                    <a data-inline="true" data-mini="true" data-rel="dialog" data-transition="flip" href="#uir_overview">Overview</a>
+                </li>
+                <li>
+                    <a data-inline="true" data-mini="true" data-rel="popup" href="#uir_instructions">Instructions</a>
+                </li>
+            </ul>
+            <div data-role="fieldcontain">
+                <label for="classGroupList">Class / Group:</label> <select data-theme="b" id="classGroupList" size="0">
+        </select>
+            </div>
+            <label for="gSize">Group size:</label>
+            <input id="gSize" type="text" value="2" />
+            <input onclick="selectRandom();" type="button" value="Randomize!" />
+            <input onclick="selectRandomSolo();" type="button" value="Pick One" />
+            <input onclick="clearGroups();" type="button" value="Clear" />
+            <!-- Flightboard display goes here -->
+            <div id="basicBoard"></div>
+            <div class="ui-screen-hidden" id="dddd-wrapper">
+                <select id="sel" size="0">
+        </select>
+            </div>
+        </div>
+    </div>
+    <div data-close-btn="right" data-role="page" id="uir_group">
+        <div data-role="header">
+            <a data-direction="reverse" data-icon="home" data-iconpos="notext" href="#page">Home</a>
+            <h2>RNDMIZER</h2>
+        </div>
+        <div data-role="content">
+            <input onclick="selectRandom();" type="button" value="Randomize!"> <button onclick="saveGrouping();">Save Grouping!</button>
+            <div class="ui-grid-a" id="group"></div>
+        </div>
+    </div>
+    <!-- ================  HELP DOCUMENTATION ============== -->
+    <div data-close-btn="right" data-role="page" id="uir_overview">
+        <div data-role="header">
+            <h2>RNDMIZER</h2>
+        </div>
+        <div data-role="content">
+            <h3>Using Randomizer</h3>
+            <p>This application will help you divide a class or group into sub-groups of randomly selected students of a given size.</p>
+            <h4>Instructions</h4>
+            <ol>
+                <li>First step is to have a readily available list of your classes. When running the app from a smartphone, the list can be stored on the device itself or in the cloud - as long as you have file access to it.</li>
+                <li>The list is comprised of a student name per line delimited by a cr-lf character (carriage return/line feed).</li>
+                <li>When the list is loaded, return to the main form and enter the size of the groups you require.</li>
+                <li>Press the "Randomize!" button and you will be presented with a randomised list.</li>
+                <li>Future versions will enable you to save these randomised groups for re-use.</li>
+            </ol>
+        </div>
+    </div>
+    <!-- =========== Open a csv file containing the list of students =========== -->
+    <!-- handled in function handleFileSelect(evt) in rndmzr.js -->
+    <div data-close-btn="right" data-role="page" id="uir_openprojectfile">
+        <div data-role="header">
+            <h2>Open class list file</h2>
+        </div>
+        <div data-role="content">
+            <input id="files" name="files[] multiple" type="file"> <a data-inline="true" data-rel="back" data-role="button" data-theme="c" href="#">OK</a>
+        </div>
+    </div>
+    <!-- =================== Edit / Create class list ======================== -->
+    <!-- Dialog for creating a new class and adding students to the class -->
+    <!-- Also, provides list of existing classes so kids can be added and deleted. -->
+    <div data-close-btn="right" data-role="page" id="uir_createclass">
+        <div data-role="header">
+            <a data-direction="reverse" data-icon="home" data-iconpos="notext" href="index.html">Home</a>
+            <h2>Edit / Create class list</h2>
+        </div>
+        <div data-role="content">
+            <!--label for="files">Open Class List:</label>
+                                <input type="file" id="classListFile" name="files[] multiple" /-->
+            <h4>Create a New Class</h4><label for="files">Class Name:</label>
+            <input id="cls_name" type="text" />
+            <label for="student-entry">Student:</label>
+            <input data-clear-btn="true" id="student-entry" name="clear" type="text" value="" />
+            <a data-inline="true" data-role="button" data-theme="b" data-transition="flow" href="#" onclick="addClassMember();">Add Student</a>
+            <a data-inline="true" data-role="button" data-theme="b" data-transition="flow" href="#" onclick="saveClassList();">Save</a>
+            <a data-inline="true" data-rel="back" data-role="button" data-theme="c" href="#">OK</a>
+            <select data-theme="b" id="classesList" size="0">
+            </select>
+            <input data-clear-btn="true" id="list" name="clear" type="text" value="" />
+            <button id='btnDelete'>Delete</button>
+            <ul data-role="listview" id="classMemberSelect"></ul>
+        </div>
+    </div>
+</body>
+
+</html>

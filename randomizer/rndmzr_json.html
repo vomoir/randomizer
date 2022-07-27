@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>RNDMZR</title>
+		<style>
+			.group{
+				margin:1em;
+				padding:1em;
+			}
+			#group_list{
+				display:none;
+			}
+		</style>
+		<link rel="stylesheet"  href="css/themes/default/jquery.mobile-1.3.0.css"/>
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"/>
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery.mobile-1.3.0.js"></script>
+		<script type="text/javascript" src="js/jquery.selectboxes.js"></script>
+		<script type="text/javascript">
+		
+		$(document).ready(function(){
+			$("#group_list1").ajaxAddOption("ajaxoptions.js");
+		})
+		
+		</script>
+		<script>
+			var selCnt = 0;
+			function selectRandom(){
+				
+				selCnt += 1;
+				var grpSize = parseInt($("#gSize").val(),10);
+				var grpMembers = "";
+				
+				var options = $("#sel > option");
+				while (options.length > 0){
+					//if(options != undefined || options != null){
+					if(options.length > 0){	
+						for(var i=0; i < grpSize; i++){
+							options[Math.floor(Math.random() * options.length)].selected = true;
+							var gmem = $('#sel :selected').text();
+							if(gmem.length > 0){
+								$('#sel :selected').remove();
+								grpMembers += gmem + ", ";
+							}
+						}
+						if(selCnt % 2 == 1){
+							$("#group").append('<div class="ui-block-a"><div class="group"><strong>Group</strong> ' + parseInt(selCnt) + '<br/>' + grpMembers + '</div></div>');
+						} else {
+							$("#group").append('<div class="ui-block-b"><div class="group"><strong>Group</strong> ' + parseInt(selCnt) + '<br/>' + grpMembers + '</div></div>');
+						}
+					}
+					options = $("#sel > option");
+					grpMembers = "";
+				}
+			}
+			function clearGroups(){
+				$("#group").append();
+			}
+			var toast=function(msg){
+				$("<div class='ui-loader ui-overlay-shadow ui-body-e ui-corner-all'><h3>"+msg+"</h3></div>")
+				.css({ display: "block", 
+					opacity: 0.90, 
+					position: "fixed",
+					padding: "7px",
+					"text-align": "center",
+					width: "270px",
+					left: ($(window).width() - 284)/2,
+					top: $(window).height()/2 })
+				.appendTo( $.mobile.pageContainer ).delay( 1500 )
+				.fadeOut( 400, function(){
+					$(this).remove();
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<div data-role="page" id="page">
+			<div data-role="header">
+				<h1>The Randomizer</h1>
+				<h2>Group Management App</h2>
+			</div>
+			
+			<div data-role="content">
+			<select size="0" id="group_list1"></select>
+				<div class="ui-grid-a">					
+					<div class="ui-block-a"><a href="#uir_overview" data-rel="dialog" data-mini="true" data-theme="b" data-role="button" data-inline="true" data-transition="flip">Overview</a></div>
+					<div class="ui-block-b"><a href="#uir_instructions" data-rel="popup" data-mini="true" data-theme="e" data-role="button" data-inline="true">Instructions</a></div>
+				</div>
+				
+				<div data-role="fieldcontain">
+					<label for="group_name">Class / Group:</label>
+					<input type="text" name="group_name" id="group_name" value="" data-mini="true" />
+				</div>
+				<div class="ui-grid-a">					
+					<div class="ui-block-a">
+						<a href="#uir_openproject" data-rel="dialog" data-mini="true" data-theme="b" data-role="button" data-inline="true" data-transition="flip">Open saved group configuration</a>
+					</div>
+					<div class="ui-block-b">
+						<a href="#uir_newproject" data-rel="dialog" data-mini="true" data-theme="b" data-role="button" data-inline="true" data-transition="flip">Create New group configuration</a>
+					</div>
+				</div>
+				
+				<div data-role="popup" id="uir_instructions" class="ui-content" data-theme="e" style="max-width:550px;">
+					<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+					<h4>What to do:</h4> 
+					<p>For each of ten user interface dimensions illustrated below, rate the program you have reviewed on a one to ten scale by moving the slider under the dimension. (Accompanying this tool are definitions for each of the ten user interface dimensions.) Please add any comments that may help to clarify or explain your rating. If a specific dimension does not seem appropriate to the interactive program you are reviewing, set the scale for that dimension to zero and add a brief comment to explain your response.</p>
+				</div>
+	
+				<label for="gSize">Group size:</label>
+				<input type="text" value="1" id="gSize"/>
+				<input type="button" value="Select" onclick="selectRandom();"/>
+				<input type="button" value="Clear" onclick="clearGroups();"/>
+				<div id="dddd-wrapper" class="ui-screen-hidden">
+					<select size="0" id="sel">
+						<option value="1">Tom Baxter</option>
+						<option value="2">Rhys Bailey</option>
+						<option value="3">Shannon Brown</option>
+						<option value="4">Isaac Daniel</option>
+						<option value="5">Jake Davis</option>
+						<option value="6">Reid Derrick</option>
+						<option value="7">Hamish Edmistone</option>
+						<option value="8">Blake Farrugia</option>
+						<option value="9">Jack Fisher</option>
+						<option value="10">Bryce Henry</option>
+						<option value="11">Connor Howard</option>
+						<option value="12">Jackson James-walsh</option>
+						<option value="13">Fletcher Konieczny</option>
+						<option value="14">Alex Ledger</option>
+						<option value="15">Connor Mcquilliam</option>
+						<option value="16">Eli Miller</option>
+						<option value="17">Oliver Moody</option>
+						<option value="18">Jacob Nolan</option>
+						<option value="19">Jaron Sowter</option>
+						<option value="20">Angus Tipping</option>			
+					</select>
+				</div>
+				<div id="group" class="ui-grid-a">
+				
+				</div>
+		</div>
+		<div id="uir_overview" data-role="page" data-close-btn="right">
+			<div data-role="header">
+				<h2>User Interface Evaluator</h2>	
+			</div>
+			<div data-role="content">
+				<label for="clear-demo">Text Input:</label>
+				<input type="text" name="clear" id="clear-demo" value="" data-clear-btn="true" />
+
+				<h3>User Interface Rating Form</h3>
+				<p>
+					The "User Interface" of an interactive instructional product, e.g., a multimedia program, is a critical element of the product that must be carefully evaluated.  If the user interface is not well-designed, learners will have little opportunity to learn from the program.  This rating form includes ten major criteria for assessing the user interface for an interactive program, such as "ease of use" and "screen design."  Not all of the criteria may be relevant to the particular program you are evaluating, but most of them will.  You may need to add additional criteria to the list.  Novice users of interactive instructional products are generally not good candidates for using this form.  The people rating the user interface should be experienced users of the type of program you are asking them to rate.  Even better, they could be experienced designers of interactive programs.
+				</p>
+				<h4>Instructions</h4>
+				<ol>
+					<li>The "User Interface Rating Form" should be used by experienced interactive multimedia designers or users to rate the interface of a new program or one under development.</li>
+					<li>The ten criteria used in the "User Interface Rating Form" are explained in detail at the end of the instrument itself.</li>
+					<li>Some criteria may not be relevant in every IMM program.</li>
+				</ol>
+			</div>
+		</div>			
+		
+	</body>
+</html>

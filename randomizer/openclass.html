@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>RNDMZR</title>
+		<style>
+			@media print{
+				.group{height:100%;}
+			}
+			.group{
+				margin:1em;
+				padding:1em;
+			}
+			#group_list{
+				display:none;
+			}
+		</style>
+		<link rel="stylesheet"  href="css/themes/default/jquery.mobile-1.3.0.css"/>
+		<!--link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700"/-->
+		<script src="js/jquery.js"></script>
+		<script src="js/jquery.mobile-1.3.0.js"></script>
+		<script src="js/jquery-csv.js"></script>
+        <script src="js/toast.js"></script>
+		<script src="js/offline.js"></script>
+		<script src="js/script.js"></script>
+
+		<script>
+			var classList = new Array();
+			function addClassMember(){
+				var classMember = $("#student-entry").val();
+				classList.push(classMember);
+				var listDiv = $('#list');
+				var listTemp ="";
+				$.each(classList, function( index, value ) {
+					listTemp += value + ", ";
+				});
+				listDiv.val(listTemp);
+				$("#student-entry").val('');				
+			}
+			
+			function saveClassList(){
+				initDatabase();				
+				var class_name = $("#cls_name").val();
+				insertClassRecord(class_name);
+				$.each(classList, function( index, value ) {
+					insertRecord(1, value);
+				});
+
+				toast("Saved");
+			}
+			
+			$(document).ready(function() {
+				if(isAPIAvailable()) {
+					$('#files').bind('change', handleFileSelect);
+				}
+			    $('#student-entry').keypress(function(event) {
+					if (event.keyCode == 13) {
+						addClassMember();
+					}
+				});
+			});
+
+		</script>
+	</head>
+	<body>
+		<div id="uir_openproject" data-role="page" data-close-btn="right">
+
+			<div data-role="header">
+				<a href="index.html" data-icon="home" data-iconpos="notext" data-direction="reverse">Home</a>
+				<h2>Edit / Create class list</h2>	
+			</div>
+			
+			<div data-role="content">
+				<label for="files">Open Class List:</label>
+				<input type="file" id="files" name="files[] multiple" />
+                                <p>OR</p>
+				<label for="files">Create a New Class List:</label>
+				<input type="text" id="cls_name" />
+                                
+                <label for="student-entry">Student:</label>
+				<input type="text" name="clear" id="student-entry" value="" data-clear-btn="true" />
+				<a href="#" onclick="addClassMember();" data-role="button" data-inline="true" data-transition="flow" data-theme="b">Add</a>
+				<a href="#" onclick="saveClassList();" data-role="button" data-inline="true" data-rel="back" data-transition="flow" data-theme="b">Save</a>
+				<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">OK</a>
+				<input type="text" name="clear" id="list" value="" data-clear-btn="true" />
+			</div>
+		</div>
+	</body>
+</html>
